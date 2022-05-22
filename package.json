@@ -1,9 +1,9 @@
 {
-  "name": "Markdown-Obfuscate",
-  "displayName": "Markdown Obfuscate",
-  "description": "Markdown Obfuscate",
-  "repository": "https://github.com/tenheadedlion/vsc-markdown-obfuscator.git",
-  "version": "0.0.1",
+  "name": "Markdown-Tools",
+  "displayName": "Markdown-Tools",
+  "description": "Markdown Tools developed for personal use, exercise and fun",
+  "repository": "https://github.com/tenheadedlion/vsc-markdown-tools.git",
+  "version": "0.0.4",
   "publisher": "TemporaryValues",
   "license": "LICENSE",
   "engines": {
@@ -13,7 +13,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.obfuscateImages"
+    "onCommand:extension.obfuscateImages",
+    "onCommand:extension.sortList"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -21,6 +22,10 @@
       {
         "command": "extension.obfuscateImages",
         "title": "Obfuscate Markdown Images"
+      },
+      {
+        "command": "extension.sortList",
+        "title": "Sort Markdown Excerpt List"
       }
     ],
     "menus": {
@@ -28,6 +33,11 @@
         {
           "when": "editorLangId == markdown",
           "command": "extension.obfuscateImages",
+          "group": "1_modification"
+        },
+        {
+          "when": "editorLangId == markdown",
+          "command": "extension.sortList",
           "group": "1_modification"
         }
       ]
@@ -53,6 +63,7 @@
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
     "@vscode/test-electron": "^2.1.3",
+    "chevrotain": "^10.1.2",
     "eslint": "^8.11.0",
     "exif-be-gone-ts": "^0.0.8",
     "glob": "^7.2.0",
@@ -61,5 +72,8 @@
     "typescript": "^4.5.5",
     "webpack": "^5.70.0",
     "webpack-cli": "^4.9.2"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2"
   }
 }
