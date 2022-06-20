@@ -7,6 +7,8 @@ import * as vscode from 'vscode';
 import * as myExtension from '../../utils.js';
 import * as ExcerptEngine from '../../excerpt-engine.js';
 import * as markdown from '../../markdown';
+import { BlockType } from '../../markdown';
+import * as FM from '../../frontmatter';
 
 suite('Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
@@ -61,6 +63,7 @@ title: Web
 desc: ''
 updated: 1652539630576
 created: 1652536578183
+listType: keyword
 ---
 
 - 1
@@ -74,6 +77,13 @@ What is this?
 `
 
 		);
-		console.log(r);
+		// there is nothing to test... because markdown is broken into lines
+		const list = r[1].content;
+		assert.deepStrictEqual(list, ['- 1', '- 2']);
+		const fm = r[0].content;
+		const blockStr = fm.slice(1, -1).reduce((prev: string, curr: string) => prev + "\n" + curr);
+		const res = FM.parse(blockStr);
+		const { listType } = res;
+		assert.strictEqual(listType, "keyword");
 	});
 });

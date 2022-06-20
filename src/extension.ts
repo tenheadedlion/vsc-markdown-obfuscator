@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import * as utils from './utils';
-import * as excerpt from './excerpt-engine';
 import * as markdown from './markdown';
-
+import * as list from './list';
+import * as FM from './frontmatter';
 
 export function activate(context: vscode.ExtensionContext) {
 	const disposable = vscode.commands.registerCommand('extension.obfuscateImages', obfuscateImage);
@@ -10,6 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
 	const sort = vscode.commands.registerCommand('extension.sortList', sortList);
 	context.subscriptions.push(sort);
 }
+
 
 function getSelected(editor: vscode.TextEditor | undefined): [vscode.TextEditor, vscode.Range, string] | undefined {
 	if (editor) {
@@ -75,8 +76,15 @@ function obfuscateImage() {
 	}
 }
 
+
+enum ListType {
+	sortByKeyword = "keyword",
+	doNothing = "NULL"
+};
+
 export function recompose(selection: string): string {
 	const blocks = markdown.parse(selection);
+	let listTypeInYaml = ListType.doNothing;
 	let newMD = "";
 	blocks.forEach((block: markdown.Block) => {
 		if (block.type === markdown.BlockType.nonListBlock) {
@@ -84,62 +92,25 @@ export function recompose(selection: string): string {
 				newMD += line + '\n\n';
 			});
 			newMD += '\n';
-		} else if(block.type === markdown.BlockType.frontmatter) {
-			block.content.forEach(line => {
-				newMD += line + '\n';
+		} else if (block.type === markdown.BlockType.frontmatter) {
+			let matter = "";
+			block.content.slice(1, -1).forEach(line => {
+				matter += line + '\n';
 			});
-			newMD += '\n';
+			const { listType } = FM.parse(matter);
+			listTypeInYaml = listType;
+			newMD = "---\n" + matter + "---\n";
 		} else if (block.type === markdown.BlockType.listBlock) {
-			let lineArr: Array<string> = [];
-			block.content.forEach(line => {
-				if (line.startsWith('- _**')) {
-					lineArr.push(line);
-				} else {
-					let content = line.substring(2);
-					let res = excerpt.parse(content);
-					console.log(res);
-					if (res) {
-						let keywords = res[0];
-						let words = res[1];
-						let recomp = "";
-						if (keywords.length !== 1) {
-							vscode.window.showErrorMessage("Expect just one keyword: " + line);
-							return;
-						}
-						recomp = "- _" + keywords[0].toLowerCase() + "_: ";
-						let isLastAWord = false;
-						words.forEach((word: string) => {
-							if (word.startsWith("**")) {
-								let trimmed = word.substring(2, word.length - 2);
-								recomp += trimmed;
-								isLastAWord = true;
-							} else if (utils.isPunctuation(word)) {
-								if (isLastAWord) {
-									recomp = recomp.trimEnd();
-								}
-								recomp += word;
-								isLastAWord = false;
-							}
-							else {
-								recomp += word;
-								isLastAWord = true;
-							}
-							recomp += " ";
-						});
-						// remove the trailing space
-						recomp = recomp.trimEnd();
-						lineArr.push(recomp);
-					}
-				}
-
-			});
-			lineArr.sort();
-			lineArr.forEach(line => {
-				newMD += line + '\n';
+			console.log(block);
+			let func = (x: markdown.Block) => x.content;
+			if (listTypeInYaml === ListType.sortByKeyword) {
+				func = list.sortListBlock;
 			}
-			);
+			func(block).forEach((line: string) => {
+				newMD += line + '\n';
+			});
 			newMD += '\n';
-		} 
+		}
 		newMD += '\n';
 	});
 	// fuck windows

@@ -3,7 +3,7 @@
   "displayName": "Markdown-Tools",
   "description": "Markdown Tools developed for personal use, exercise and fun",
   "repository": "https://github.com/tenheadedlion/vsc-markdown-tools.git",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publisher": "TemporaryValues",
   "license": "LICENSE",
   "engines": {
@@ -14,18 +14,31 @@
   ],
   "activationEvents": [
     "onCommand:extension.obfuscateImages",
-    "onCommand:extension.sortList"
+    "onCommand:extension.sortList",
+    "onCommand:extension.testLink"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "extension.obfuscateImages",
-        "title": "Obfuscate Markdown Images"
+        "title": "Markdown: Obfuscate Images"
       },
       {
         "command": "extension.sortList",
-        "title": "Sort Markdown Excerpt List"
+        "title": "Markdown: Sort Excerpt Lists"
+      },
+      {
+        "command": "extension.testLink",
+        "title": "MarkDown: Test Link"
+      }
+    ],
+    "keybindings":[
+      {
+        "command": "extension.sortList",
+        "key": "ctrl+alt+s",
+        "mac": "ctrl+alt+s",
+        "when": "editorFocus && editorLangId == markdown"
       }
     ],
     "menus": {
@@ -74,6 +87,7 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "yaml": "^2.1.1"
   }
 }

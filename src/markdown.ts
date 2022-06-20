@@ -76,7 +76,7 @@ function getParser(): any {
                 () => {
                     this.CONSUME2(line, { LABEL: 'follow' });
                 }
-            )
+            );
         });
 
     }
@@ -99,11 +99,9 @@ function getInterpreter(parser: CstParser): any {
             this.validateVisitor();
         }
         markdown(ctx: any): Array<Block> {
-            console.log("visiting markdown");
             return this.visit(ctx.blocks);
         }
         blocks(ctx: any): Array<Block> {
-            console.log("visiting blocks");
             const blocks: Array<Block> = [];
             ctx.blockList.forEach((element: any) => {
                 blocks.push(this.visit(element));
@@ -112,7 +110,6 @@ function getInterpreter(parser: CstParser): any {
         }
 
         block(ctx: any): Block {
-            console.log("visiting block");
             if (ctx.listBlock) {
                 return { type: BlockType.listBlock, content: this.visit(ctx.listBlock)};                
             } else if (ctx.nonListBlock) {

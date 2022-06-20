@@ -12,9 +12,9 @@ export class FormulaError extends Error {
 
 export class ParserError extends FormulaError { }
 export function parse(entry: string): any {
-    const commonWord = createToken({ name: "commonWord", pattern: /\w+/ });
+    const commonWord = createToken({ name: "commonWord", pattern: /[\w-]+/ });
     const keyword = createToken({ name: "keyword", pattern: /\*\*\w+\*\*/ });
-    const punctuation = createToken({ name: "punctuation", pattern: /[.,?!'\";:-]+/});
+    const punctuation = createToken({ name: "punctuation", pattern: /[.,?!'\";:]+/});
     const whitespace = createToken({ name: "whitespace", pattern: /\s+/, group: Lexer.SKIPPED });
     const allTokens = [
         whitespace,

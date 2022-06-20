@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import * as vscode from 'vscode';
 
 export function isExternalUrl(path: string): boolean {
     // Get this regex from:
@@ -75,4 +76,45 @@ export function breakMdImage(line: string): [string, string] | undefined {
         return [m[1], m[2]];
     }
     return undefined;
+}
+
+export function getLink(
+    documentParam?: vscode.TextDocument
+): { alt: string, link: string } {
+    const document = documentParam || vscode.window.activeTextEditor?.document;
+
+    if (!document || (document && document.languageId !== "markdown")) {
+        return { alt: '', link: '' };
+    }
+
+    const active = vscode.window.activeTextEditor!.selection.active;
+    const range = document.getWordRangeAtPosition(
+        active,
+        /\[\[.*\]\]/
+    );
+
+    if (!range || (range && range.isEmpty)) {
+        return { alt: '', link: '' };
+    }
+
+    return splitAltAndLink(document.getText(range));
+};
+
+function splitAltAndLink(input: string)
+    : {
+        alt: string,
+        link: string
+    } {
+    const regex = /^\[\[(?:(?=.+\|)(.+)\|(.+)|(.+))\]\]$/;
+    const m = regex.exec(input);
+    if (m === null) {
+        return { alt: '', link: '' };
+    }
+
+    if (m[1] === undefined) {
+        return { alt: '', link: m[3] };
+    } else {
+        return { alt: m[1], link: m[2] };
+    }
+
 }
