@@ -36,8 +36,8 @@
     "keybindings":[
       {
         "command": "extension.sortList",
-        "key": "ctrl+alt+s",
-        "mac": "ctrl+alt+s",
+        "key": "ctrl+shift+-",
+        "mac": "ctrl+shift+-",
         "when": "editorFocus && editorLangId == markdown"
       }
     ],

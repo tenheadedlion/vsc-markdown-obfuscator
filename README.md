@@ -36,4 +36,4 @@ _**extracts**_: to take or publish extracts from (something, such as a book)
 
 and these list entries are sorted by keyword.
 
-shortcut: `ctrl+alt+s`
+shortcut: `ctrl+shift+-`
