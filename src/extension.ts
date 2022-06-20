@@ -9,10 +9,11 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable);
 	const sort = vscode.commands.registerCommand('extension.sortList', sortList);
 	context.subscriptions.push(sort);
+	context.subscriptions.push(vscode.commands.registerCommand('extension.pasteUrl', utils.pasteLink));
 }
 
 
-function getSelected(editor: vscode.TextEditor | undefined): [vscode.TextEditor, vscode.Range, string] | undefined {
+function getDocWideSelection(editor: vscode.TextEditor | undefined): [vscode.TextEditor, vscode.Range, string] | undefined {
 	if (editor) {
 		const document = editor.document;
 		let selection: vscode.Range = editor.selection;
@@ -41,7 +42,7 @@ function intoLines(text: string): [string[], string] {
 }
 
 function obfuscateImage() {
-	let s = getSelected(vscode.window.activeTextEditor);
+	let s = getDocWideSelection(vscode.window.activeTextEditor);
 	if (s === undefined) {
 		return;
 	}
@@ -101,7 +102,6 @@ export function recompose(selection: string): string {
 			listTypeInYaml = listType;
 			newMD = "---\n" + matter + "---\n";
 		} else if (block.type === markdown.BlockType.listBlock) {
-			console.log(block);
 			let func = (x: markdown.Block) => x.content;
 			if (listTypeInYaml === ListType.sortByKeyword) {
 				func = list.sortListBlock;
@@ -119,7 +119,7 @@ export function recompose(selection: string): string {
 }
 
 function sortList() {
-	let s = getSelected(vscode.window.activeTextEditor);
+	let s = getDocWideSelection(vscode.window.activeTextEditor);
 	if (s) {
 		let selectedText = s[2];
 		let vscodeSelection = s[1];

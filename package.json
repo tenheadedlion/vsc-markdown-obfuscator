@@ -3,7 +3,7 @@
   "displayName": "Markdown-Tools",
   "description": "Markdown Tools developed for personal use, exercise and fun",
   "repository": "https://github.com/tenheadedlion/vsc-markdown-tools.git",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "publisher": "TemporaryValues",
   "license": "LICENSE",
   "engines": {
@@ -15,7 +15,8 @@
   "activationEvents": [
     "onCommand:extension.obfuscateImages",
     "onCommand:extension.sortList",
-    "onCommand:extension.testLink"
+    "onCommand:extension.testLink",
+    "onCommand:extension.pasteUrl"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -31,9 +32,19 @@
       {
         "command": "extension.testLink",
         "title": "MarkDown: Test Link"
+      },
+      {
+        "command": "extension.pasteUrl",
+        "title": "MarkDown: Paste Url"
       }
     ],
     "keybindings":[
+      {
+        "command": "extension.pasteUrl",
+        "key": "ctrl+v",
+        "mac": "ctrl+v",
+        "when": "editorFocus && editorLangId == markdown"
+      },
       {
         "command": "extension.sortList",
         "key": "ctrl+shift+-",
@@ -51,6 +62,11 @@
         {
           "when": "editorLangId == markdown",
           "command": "extension.sortList",
+          "group": "1_modification"
+        },
+        {
+          "when": "editorLangId == markdown",
+          "command": "extension.pasteUrl",
           "group": "1_modification"
         }
       ]

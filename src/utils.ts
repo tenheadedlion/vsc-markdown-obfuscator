@@ -78,26 +78,51 @@ export function breakMdImage(line: string): [string, string] | undefined {
     return undefined;
 }
 
-export function getLink(
-    documentParam?: vscode.TextDocument
-): { alt: string, link: string } {
-    const document = documentParam || vscode.window.activeTextEditor?.document;
-
-    if (!document || (document && document.languageId !== "markdown")) {
-        return { alt: '', link: '' };
+// return a context
+function getCursorContext():
+    | { editor: undefined; range: undefined; text: undefined; }
+    | { editor: vscode.TextEditor; range: vscode.Range; text: string; } {
+    const editor = vscode.window.activeTextEditor;
+    console.log("editor: " + editor);
+    if (editor === undefined) {
+        return { editor: undefined, range: undefined, text: undefined };
+    }
+    const document = editor.document;
+    const selection = editor.selection;
+    console.log("selection: " + selection);
+    let range = undefined;
+    if (selection.isEmpty) {
+        console.log("active: " + selection.active);
+        range = document.getWordRangeAtPosition(selection.active, /\S+/)!;
     }
 
-    const active = vscode.window.activeTextEditor!.selection.active;
-    const range = document.getWordRangeAtPosition(
-        active,
-        /\[\[.*\]\]/
+    range = range ? range : new vscode.Range(selection.start, selection.end);
+
+    const text = document.getText(range)!;
+    return { editor, range, text };
+}
+
+export async function pasteLink(
+) {
+    const { editor, range, text } = getCursorContext();
+    if (editor === undefined) {
+        return;
+    }
+    const url = await vscode.env.clipboard.readText().then((r: string) => r.trim());
+    console.log("text: " + text);
+    console.log("clipboard: " + url);
+    console.log("range: " + range);
+    const checkedText = text.trim();
+    if (checkedText === '') {
+        editor.edit((e) => { e.replace(range, url); });
+        return;
+    }
+    const mdUrl = "[" + checkedText + "](" + url + ")";
+    editor.edit((e) => {
+
+        e.replace(range, mdUrl);
+    }
     );
-
-    if (!range || (range && range.isEmpty)) {
-        return { alt: '', link: '' };
-    }
-
-    return splitAltAndLink(document.getText(range));
 };
 
 function splitAltAndLink(input: string)

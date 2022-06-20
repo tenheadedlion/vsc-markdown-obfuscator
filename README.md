@@ -34,6 +34,16 @@ After Processing:
 _**extracts**_: to take or publish extracts from (something, such as a book)
 ```
 
-and these list entries are sorted by keyword.
+And these list entries are sorted by keyword.
 
-shortcut: `ctrl+shift+-`
+To use this command, a frontmatter is needed, in the matter specify a pair: `listType: keyword`
+
+The shortcut is set to be `ctrl+shift+-`
+
+## Paste Url
+
+Paste Url with `ctrl+v` as usual, the selected text along with the Url in clipboard will be combined into a markdown link. If no text is selected, the extension will take it that you want to choose the word the cursor is in. If the cursor is not within any words, the extension will let you paste the Url as plain text.
+
+If what you want to paste is not a Url, you should move the cursor to a clean and less suspicious place.
+
+![](https://raw.githubusercontent.com/tenheadedlion/vsc-markdown-tools/master/pasteUrl.gif)

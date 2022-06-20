@@ -12,7 +12,6 @@ export function sortListBlock(block: markdown.Block) {
         } else {
             let content = line.substring(2);
             let res = excerpt.parse(content);
-            console.log(res);
             if (res) {
                 let keywords = res[0];
                 let words = res[1];
