@@ -3,7 +3,7 @@
   "displayName": "Markdown-Tools",
   "description": "Markdown Tools developed for personal use, exercise and fun",
   "repository": "https://github.com/tenheadedlion/vsc-markdown-tools.git",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "publisher": "TemporaryValues",
   "license": "LICENSE",
   "engines": {

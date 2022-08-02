@@ -118,11 +118,15 @@ export async function pasteLink(
         return;
     }
     const mdUrl = "[" + checkedText + "](" + url + ")";
+    const len = mdUrl.length - checkedText.length;
     editor.edit((e) => {
-
         e.replace(range, mdUrl);
-    }
-    );
+    });
+    // get the end of the current selection
+    let pos = editor.selection.end;
+    // add one to leave the new string one space away
+    pos = new vscode.Position(pos.line, pos.character + len + 1);
+    editor.selection = new vscode.Selection(pos, pos);
 };
 
 function splitAltAndLink(input: string)
